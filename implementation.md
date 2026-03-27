@@ -1,6 +1,6 @@
 # Phase 100 — End-to-End: Paper to Extract to Evaluate to Review
 
-## Version: 1.0 (Plan)
+## Version: 1.1 (Final as-built)
 
 ## Goal
 The capstone phase. Build a complete end-to-end pipeline that: loads compounds, computes RDKit descriptors, trains an RF classifier, ranks hits, and sends the top-5 to Claude for structured review. Combines data loading, cheminformatics, ML, and LLM review into a single cohesive pipeline.
@@ -37,13 +37,29 @@ PYTHONUTF8=1 python main.py --top 5 --threshold 8.0 --model claude-haiku-4-5-202
 - Single lean API call
 
 ## Verification Checklist
-- [ ] `--help` works
-- [ ] Phase 100 banner prints
-- [ ] Descriptors computed for all valid compounds
-- [ ] Classifier trains and produces rankings
-- [ ] Claude API call succeeds
-- [ ] All output files well-formed
-- [ ] Console shows full pipeline summary
+- [x] `--help` works
+- [x] Phase 100 banner prints
+- [x] Descriptors computed for all valid compounds
+- [x] Classifier trains and produces rankings
+- [x] Claude API call succeeds
+- [x] All output files well-formed
+- [x] Console shows full pipeline summary
+
+## Results
+- 45 compounds processed, 8 hits (pIC50 >= 8.0)
+- Cross-val ROC-AUC: **0.941**
+- RDKit descriptors: MolWt, LogP, HBA, HBD, TPSA, RotBonds, RingCount, HeavyAtomCount + Morgan FP
+- Claude reviewed top-5: 1 advance, 3 optimize, 1 deprioritize
+- Three output files: descriptors.csv, rankings.csv, end_to_end_report.json
+
+## Key Findings
+- Full pipeline runs in a single script with one Claude API call
+- RF classifier achieves strong AUC (0.941) even on a 45-compound library
+- Claude provides actionable medicinal chemistry recommendations when given descriptors + predictions
+- Demonstrates the complete drug discovery workflow: data -> features -> ML -> expert review
+
+## Deviations
+- None — built cleanly from plan
 
 ## Risks
 - Small dataset (45 compounds) — acceptable for demonstration
